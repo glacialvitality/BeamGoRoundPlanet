@@ -1,2 +1,2 @@
-THIS IS NOT FINISHED
-There are currently bugs with this module, but the collision should work fine.
+> **Warning**
+> This module has some positioning related bugs regarding the BeamGoRoundBeam.
