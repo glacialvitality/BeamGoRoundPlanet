@@ -1,0 +1,19 @@
+{
+  "Name": "BeamGoRoundPlanet",
+  "FolderName": "BeamGoRoundPlanet",
+  "Author": "GlacialVitality",
+  "Description": "The BeamGoRoundPlanet Object from Dreadnought Ported to SMG2",
+  "Install": "git:https://github.com/glacialvitality/LavaJamboSunPlanet.git",
+  "InstallDependencies": ["Syati_ObjectFactories", "Syati_Init"],
+  "ModuleData" : [
+    {
+      "ProductMapObj" : [
+        {
+          "Name" : "BeamGoRoundPlanet",
+          "Function" : "createExtActor<BeamGoRoundPlanet>",
+          "Include" : "BeamGoRoundPlanet.h"
+        }
+      ]
+    }
+  ]
+}
