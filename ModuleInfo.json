@@ -5,6 +5,9 @@
   "Description": "The BeamGoRoundPlanet Object from Dreadnought Ported to SMG2",
   "Install": "git:https://github.com/glacialvitality/LavaJamboSunPlanet.git",
   "InstallDependencies": ["Syati_ObjectFactories", "Syati_Init"],
+  "SupportedGames": [
+    "SB4"
+  ],
   "ModuleData" : [
     {
       "ProductMapObj" : [
