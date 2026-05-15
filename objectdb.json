@@ -1,0 +1,30 @@
+{
+    "Classes": [
+        {
+            "Progress": 0,
+            "Parameters": {},
+            "Games": 3,
+            "InternalName": "BeamGoRoundPlanet",
+            "Notes": "",
+            "Name": "BeamGoRoundPlanet"
+        }
+    ],
+    "Objects": [
+        {
+            "Progress": 2,
+            "Category": "stagepart",
+            "ClassNameSMG2": "BeamGoRoundPlanet",
+            "IsLeftover": false,
+            "ClassNameSMG1": "BeamGoRoundPlanet",
+            "InternalName": "BeamGoRoundPlanet",
+            "ListSMG1": "ObjInfo",
+            "ListSMG2": "ObjInfo",
+            "Name": "Dreadnought -- Beam Planet",
+            "IsUnused": false,
+            "AreaShape": "Any",
+            "Games": 3,
+            "File": "Map",
+            "Notes": "A set of two rotating cone-shaped planets with electric beams that can be found in the first Star in Dreadnought Galaxy."
+        }
+    ]
+}
