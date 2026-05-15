@@ -1,10 +1,8 @@
-> [!CAUTION]
-> This module currently does NOT support SyatiManager. It may be considered in a future update.
+This works with Super Mario Galaxy 2 (SB4E01). Not sure about other regions. Nintendo Switch port is not supported nor planned.
 
-> [!IMPORTANT]
-> This module has some positioning related bugs regarding the BeamGoRoundBeam. Only collision appears to work properly.
+### Setup
+You may need to add the following entries to your `ProductMapObjDataTable.bcsv`:
+*BeamGoRoundPlanet* (ModelName, ClassName)
 
-Currently ports the collision fixes regarding the BeamGoRound planet to SMG2.
-
-# Planned Features:
-- BeamGoRoundBeam fix
+### Object Arguments
+*None*

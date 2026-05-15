@@ -1,4 +1,6 @@
 #include "BeamGoRoundPlanet.h"
+#include "Game/Util/ActorAnimUtil.h"
+#include "Game/Util/ModelUtil.h"
 
 BeamGoRoundBeam::BeamGoRoundBeam(MtxPtr mtx) : LiveActor("ビームゴーラウンドビーム") {
     mModelDrawer = nullptr;
@@ -6,24 +8,22 @@ BeamGoRoundBeam::BeamGoRoundBeam(MtxPtr mtx) : LiveActor("ビームゴーラウ�
     mBeamJointMtx = mtx;
 }
 
-
-void BeamGoRoundBeam::init(const JMapInfoIter &rIter) {
-    mPosition.set(mBeamJointMtx[0][3], mBeamJointMtx[1][3], mBeamJointMtx[2][3]);
-    MR::setBaseTRMtx(this, mBeamJointMtx);
-    //MR::connectToScene(this, 0x21, 0x5, 0x1A, 0x1C); //1C is dummied out. NAILS.
-    MR::connectToScene(this, MR::MovementType_MapObj, MR::CalcAnimType_MapObj, MR::DrawBufferType_Bloom, MR::DrawType_BloomEffectPreDraw);
-    initHitSensor(1);   
+void BeamGoRoundBeam::init(const JMapInfoIter& rIter) {
+    initModelManagerWithAnm("BeamGoRoundBeam", nullptr, nullptr, false);
+    mTranslation.set(mBeamJointMtx[0][3], mBeamJointMtx[1][3], mBeamJointMtx[2][3]);  //mPosition.set< f32 >(mBeamJointMtx[0][3], mBeamJointMtx[1][3], mBeamJointMtx[2][3]);
+    MR::connectToScene(this, MR::MovementType_MapObj, MR::CalcAnimType_MapObj, MR::DrawBufferType_IndirectMapObj, MR::DrawType_1C); //DrawType_VolumeModel
+    initHitSensor(1);
     MR::addHitSensorCallbackEnemyAttack(this, "beam", 4, 100.0f);
     initEffectKeeper(0, nullptr, false);
     mModelDrawer = MR::createVolumeDrawer("ビームボリューム", "BeamGoRoundBeamVolume", getBaseMtx());
     mBloomModel = MR::createModelObjBloomModel("ビームブルーム", "BeamGoRoundBeamBloom", getBaseMtx(), true);
     MR::setClippingTypeSphereContainsModelBoundingBox(this, 100.0f);
-    MR::startBtk(this, "BeamGoRoundBeam");
+    MR::tryStartAllAnim(this, "BeamGoRoundBeam");
     makeActorAppeared();
 }
 
 void BeamGoRoundBeam::calcAndSetBaseMtx() {
-    mPosition.set(mBeamJointMtx[0][3], mBeamJointMtx[1][3], mBeamJointMtx[2][3]);
+    mTranslation.set(mBeamJointMtx[0][3], mBeamJointMtx[1][3], mBeamJointMtx[2][3]); //mPosition.set< f32 >(mBeamJointMtx[0][3], mBeamJointMtx[1][3], mBeamJointMtx[2][3]);
     MR::setBaseTRMtx(this, mBeamJointMtx);
 }
 
@@ -31,18 +31,18 @@ void BeamGoRoundBeam::draw() const {
     mModelDrawer->draw();
 }
 
-void BeamGoRoundBeam::updateHitSensor(HitSensor *pSensor) {
+void BeamGoRoundBeam::updateHitSensor(HitSensor* pSensor) {
     f32 radius = pSensor->mRadius;
     TVec3f up;
     MR::calcUpVec(&up, this);
     TVec3f v7;
-    JMAVECScaleAdd(up, mPosition, v7, radius);
+    JMAVECScaleAdd(up, mTranslation, v7, radius);
     TVec3f v6;
     JMAVECScaleAdd(up, v7, v6, (2700.0f - radius));
     MR::calcPerpendicFootToLineInside(&pSensor->mPosition, *MR::getPlayerPos(), v7, v6);
 }
 
-void BeamGoRoundBeam::attackSensor(HitSensor *pSender, HitSensor *pReceiver) {
+void BeamGoRoundBeam::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isSensorPlayer(pReceiver)) {
         if (MR::isSensorEnemyAttack(pSender)) {
             MR::sendMsgEnemyAttackElectric(pReceiver, pSender);
@@ -54,13 +54,13 @@ namespace NrvBeamGoRoundPlanet {
     FULL_NERVE(BeamGoRoundPlanetNrvWait, BeamGoRoundPlanet, Wait);
 };
 
-BeamGoRoundPlanet::BeamGoRoundPlanet(const char *pName) : MapObjActor(pName) {
+BeamGoRoundPlanet::BeamGoRoundPlanet(const char* pName) : MapObjActor(pName) {
     mBeams = nullptr;
     _C8 = nullptr;
     _CC = nullptr;
 }
 
-void BeamGoRoundPlanet::init(const JMapInfoIter &rIter) {
+void BeamGoRoundPlanet::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
     MapObjActorInitInfo info;
     info.setupHioNode("");
@@ -84,12 +84,11 @@ void BeamGoRoundPlanet::exeWait() {
     MR::startLevelSound(this, "SE_OJ_LV_BEAM_GO_ROUND", -1, -1, -1);
 }
 
-void BeamGoRoundPlanet::connectToScene(const MapObjActorInitInfo &) {
-    MR::connectToSceneMapObj(this);
+void BeamGoRoundPlanet::connectToScene(const MapObjActorInitInfo&) {
+    MR::connectToScenePlanet(this);
 }
 
 void BeamGoRoundPlanet::initBeam() {
-    
     mBeams = new BeamGoRoundBeam*[16];
     for (s32 i = 0; i < 16; i++) {
         char buf[256];
@@ -100,10 +99,6 @@ void BeamGoRoundPlanet::initBeam() {
     }
 }
 
-BeamGoRoundBeam::~BeamGoRoundBeam() {
+BeamGoRoundBeam::~BeamGoRoundBeam() {}
 
-}
-
-BeamGoRoundPlanet::~BeamGoRoundPlanet() {
-    
-}
+BeamGoRoundPlanet::~BeamGoRoundPlanet() {}
